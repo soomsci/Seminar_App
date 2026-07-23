@@ -20,7 +20,7 @@
 | DB | Firebase **Realtime Database** | 실시간 구독(`onValue`) 사용 |
 | Firebase SDK | v10+ modular SDK, CDN import | `https://www.gstatic.com/firebasejs/...` |
 | 호스팅 | Firebase Hosting | 배포는 세션 D 담당 |
-| 대상 브라우저 | 최신 Chrome/Edge/Safari, 모바일 포함 | 연수생 화면은 모바일 우선 |
+| 대상 브라우저 | 2021년 이후 모든 모던 브라우저 — Chrome/Edge/Safari/Firefox/삼성 인터넷/웨일, 모바일·인앱 브라우저 포함 | 특정 브라우저 전용 API 금지. 진동 등 미지원 기능은 조용히 생략(progressive enhancement). 연수생 화면은 모바일 우선 |
 
 ## 3. 화면 명세
 
