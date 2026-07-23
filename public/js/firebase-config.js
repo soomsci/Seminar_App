@@ -5,11 +5,12 @@
 // 키를 채우기 전까지는 URL에 ?mock=1을 붙여 목 모드로 개발한다.
 
 export const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_PROJECT.firebaseapp.com",
-  databaseURL: "https://YOUR_PROJECT-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "YOUR_PROJECT",
-  storageBucket: "YOUR_PROJECT.firebasestorage.app",
-  messagingSenderId: "YOUR_SENDER_ID",
-  appId: "YOUR_APP_ID",
+  apiKey: "AIzaSyAHFQ_PnY2i_5dMO5cnZz3pMTlDSysByLo",
+  authDomain: "seminar-app-ms.firebaseapp.com",
+  databaseURL: "https://seminar-app-ms-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "seminar-app-ms",
+  storageBucket: "seminar-app-ms.firebasestorage.app",
+  messagingSenderId: "19267127623",
+  appId: "1:19267127623:web:49e4b9d98ea7c9b148a462",
+  measurementId: "G-2GHTRK1FBQ"
 };
