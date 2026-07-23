@@ -1,0 +1,64 @@
+{
+  "rules": {
+    ".read": false,
+    ".write": false,
+
+    "sessions": {
+      ".read": false,
+
+      "$code": {
+        ".read": "$code.matches(/^[A-HJ-NP-Z2-9]{6}$/)",
+        ".write": "$code.matches(/^[A-HJ-NP-Z2-9]{6}$/)",
+
+        "meta": {
+          ".validate": "newData.hasChildren(['createdAt', 'step', 'round'])",
+          "createdAt": {
+            ".validate": "newData.isNumber() && (!data.exists() || newData.val() == data.val())"
+          },
+          "step": {
+            ".validate": "newData.isNumber() && newData.val() >= 1"
+          },
+          "round": {
+            ".validate": "newData.isNumber() && newData.val() >= 1"
+          },
+          "$other": { ".validate": false }
+        },
+
+        "participants": {
+          "$pid": {
+            ".validate": "newData.hasChildren(['name', 'status'])",
+            "name": {
+              ".validate": "newData.isString() && newData.val().length >= 1 && newData.val().length <= 30"
+            },
+            "status": {
+              ".validate": "newData.val() == 'green' || newData.val() == 'red' || newData.val() == 'none'"
+            },
+            "comment": {
+              ".validate": "newData.isString() && newData.val().length <= 200"
+            },
+            "joinedAt": { ".validate": "newData.isNumber()" },
+            "updatedAt": { ".validate": "newData.isNumber()" },
+            "$other": { ".validate": false }
+          }
+        },
+
+        "history": {
+          "$step": {
+            "$round": {
+              "$pid": {
+                "name": { ".validate": "newData.isString()" },
+                "status": {
+                  ".validate": "newData.val() == 'green' || newData.val() == 'red' || newData.val() == 'none'"
+                },
+                "comment": { ".validate": "newData.isString() && newData.val().length <= 200" },
+                "$other": { ".validate": false }
+              }
+            }
+          }
+        },
+
+        "$other": { ".validate": false }
+      }
+    }
+  }
+}

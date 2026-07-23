@@ -1,0 +1,70 @@
+/* 공통 스타일 — 색상 토큰·리셋·폰트 (세션 A 소유)
+   B·C는 여기의 CSS 변수를 사용한다. 상태 색은 --c-green/--c-red/--c-gray로 통일. */
+
+:root {
+  /* 상태 색 — 프로젝터에서 뒷자리에서도 구분되도록 채도 높게 */
+  --c-green: #16a34a;
+  --c-red: #dc2626;
+  --c-gray: #9ca3af;
+
+  /* 기본 팔레트 */
+  --c-bg: #f6f7f9;
+  --c-surface: #ffffff;
+  --c-text: #1f2430;
+  --c-text-sub: #6b7280;
+  --c-border: #e2e5ea;
+  --c-primary: #2563eb;
+
+  --radius: 12px;
+  --shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+  --font-sans: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo",
+    "Pretendard", "Noto Sans KR", "Malgun Gothic", system-ui, sans-serif;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--font-sans);
+  background: var(--c-bg);
+  color: var(--c-text);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  touch-action: manipulation; /* 모바일 더블탭 확대 방지 */
+}
+
+input,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+img,
+svg,
+canvas {
+  max-width: 100%;
+  display: block;
+}
+
+:focus-visible {
+  outline: 3px solid var(--c-primary);
+  outline-offset: 2px;
+}
