@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover, interactive-widget=resizes-content" />
+<title>연수 실습 진행도</title>
+<link rel="stylesheet" href="css/common.css" />
+<link rel="stylesheet" href="css/participant.css" />
+</head>
+<body>
+
+<section id="entry-screen" class="screen">
+  <div class="entry-card">
+    <h1>연수 실습 진행도</h1>
+    <p class="sub">세션코드를 입력하고 입장하세요</p>
+    <form id="entry-form" novalidate>
+      <label for="code-input">세션코드 (6자리)</label>
+      <input
+        id="code-input"
+        name="code"
+        type="text"
+        inputmode="text"
+        autocomplete="off"
+        autocapitalize="characters"
+        autocorrect="off"
+        spellcheck="false"
+        maxlength="6"
+        placeholder="예: ABC234"
+        required
+      />
+      <label for="name-input">이름 (선택)</label>
+      <input
+        id="name-input"
+        name="name"
+        type="text"
+        autocomplete="off"
+        maxlength="30"
+        placeholder="비워두면 참가자 번호가 자동으로 부여돼요"
+      />
+      <button type="submit" id="join-btn" class="btn-primary">입장하기</button>
+      <p id="entry-error" class="error-msg" role="alert" hidden></p>
+    </form>
+  </div>
+</section>
+
+<section id="main-screen" class="screen" hidden>
+  <header class="top-bar">
+    <span id="conn-dot" class="conn-dot" aria-hidden="true"></span>
+    <span id="step-label" class="step-label">연결하는 중…</span>
+  </header>
+
+  <div id="toast" class="toast" role="status" hidden></div>
+
+  <main class="status-area">
+    <button id="btn-green" type="button" class="status-btn status-btn--green">
+      <span class="status-emoji" aria-hidden="true">🟢</span>
+      <span class="status-text">여기까지 완료</span>
+    </button>
+    <button id="btn-red" type="button" class="status-btn status-btn--red">
+      <span class="status-emoji" aria-hidden="true">🔴</span>
+      <span class="status-text">막혔어요</span>
+    </button>
+  </main>
+
+  <section id="comment-panel" class="comment-panel" hidden>
+    <label for="comment-input">어디서 막혔는지 알려주세요 (선택)</label>
+    <textarea id="comment-input" maxlength="200" rows="3" placeholder="예: 3번 화면에서 오류가 떠요"></textarea>
+    <div class="comment-footer">
+      <span id="comment-count">0/200</span>
+    </div>
+  </section>
+</section>
+
+<section id="restore-error" class="screen" hidden>
+  <div class="entry-card">
+    <h1>연결할 수 없어요</h1>
+    <p class="sub">세션을 찾을 수 없어요. 다시 입장해주세요.</p>
+    <button type="button" id="retry-btn" class="btn-primary">다시 입장하기</button>
+  </div>
+</section>
+
+<script type="module" src="js/participant.js"></script>
+</body>
+</html>

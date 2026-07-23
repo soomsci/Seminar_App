@@ -30,9 +30,19 @@
 
 ## 세션 B — 연수생 화면
 
-- 완료: (아직 시작 안 함)
-- 남은 것: TASKS.md 세션 B 전체
-- 요청: 없음
+- 완료 (2026-07-24):
+  - `public/index.html`, `public/js/participant.js`, `public/css/participant.css` 구현. db.js API(joinSession/setStatus/onMeta/onParticipants)만 사용, Firebase 직접 호출 없음.
+  - 입장 화면(코드 자동 대문자·6자리 검증 + 이름 선택) → `joinSession()` → localStorage(`seminar-app:participant`) 저장 → 새로고침 시 재입장 없이 복귀.
+  - 메인 화면: `onMeta`로 "N단계 진행 중" 표시, 🟢/🔴 큰 버튼(`setStatus`), 빨강 선택 시 코멘트 패널 슬라이드(200자, 카운터, 600ms 디바운스 전송 + blur 시 즉시 전송).
+  - 리셋 대응: `onMeta` 변화 감지해 step 증가 시 "N단계로 넘어갔어요" 토스트, round만 증가(다시 확인) 시 안내 문구 토스트 + `navigator.vibrate` 진동. 실제 상태 리셋 자체는 `onParticipants` 구독이 서버 값(`status:none`)을 받아 반영.
+  - localStorage 복원 실패 대비: 6초 내 `onMeta`/`onParticipants` 응답이 없으면 "세션을 찾을 수 없어요" 화면 + 다시 입장하기 버튼.
+  - 백그라운드 복귀 시(`visibilitychange`, `pageshow`) 구독 재생성으로 재동기화.
+  - 네트워크 연결 점: db.js가 연결 상태 API를 제공하지 않아 `navigator.onLine`/online·offline 이벤트로 대체 구현(최선노력, 실제 Firebase 연결 상태와는 다를 수 있음).
+  - 확인 완료: `?mock=1`(세션 ABC234)로 입장→🟢/🔴→코멘트→다시 확인 토스트/진동 호출→다음 단계 토스트→새로고침 복귀→잘못된 코드/짧은 코드 에러 문구까지 브라우저(Chrome, claude-in-chrome)로 직접 확인. 320px 뷰(iframe으로 실측)에서 버튼·코멘트 패널 깨짐 없음, 코멘트 복원도 정상.
+  - 버그 수정: `participant.css`에서 `#entry-screen`/`#main-screen`에 준 `display:flex`가 CSS 캐스케이드 우선순위(오서 스타일이 UA `[hidden]{display:none}`을 이김) 때문에 `hidden` 속성을 무시하고 두 화면이 동시에 보이는 문제가 있었음. `:not([hidden])`으로 스코프를 좁혀 해결.
+- 남은 것: 없음 (세션 B 완료). 실제 Firebase 모드(비 mock)에서의 재확인은 세션 D의 통합 테스트에서 커버됨.
+- 요청:
+  - 연결 상태 표시(SPEC §7 "작은 점")는 db.js에 Firebase `.info/connected` 구독을 노출하는 API가 없어 브라우저 `navigator.onLine`으로 대체했다. 실제 Firebase 연결 유실(온라인이지만 DB 연결 끊김)은 감지하지 못한다. 세션 A가 여유 있으면 `onConnectionState(cb)` 같은 API 추가를 검토해달라 — 필수는 아니고 개선 제안.
 
 ## 세션 C — 강사 대시보드
 

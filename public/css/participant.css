@@ -1,0 +1,232 @@
+/* 연수생 화면 스타일 (세션 B 소유) — 모바일 우선, 320px 기준 */
+
+.screen {
+  min-height: 100dvh;
+  min-height: 100vh; /* dvh 미지원 브라우저 대비 */
+}
+
+/* ---------- 입장 화면 ---------- */
+
+#entry-screen:not([hidden]),
+#restore-error:not([hidden]) {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 16px;
+}
+
+.entry-card {
+  width: 100%;
+  max-width: 360px;
+}
+
+.entry-card h1 {
+  font-size: 1.5rem;
+  margin-bottom: 8px;
+  text-align: center;
+}
+
+.entry-card .sub {
+  color: var(--c-text-sub);
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+#entry-form label {
+  display: block;
+  font-size: 0.9rem;
+  color: var(--c-text-sub);
+  margin-bottom: 6px;
+}
+
+#entry-form input {
+  width: 100%;
+  height: 48px;
+  padding: 0 14px;
+  margin-bottom: 16px;
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius);
+  background: var(--c-surface);
+  font-size: 1.1rem;
+}
+
+#code-input {
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.btn-primary {
+  width: 100%;
+  height: 52px;
+  border-radius: var(--radius);
+  background: var(--c-primary);
+  color: #fff;
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.btn-primary:disabled {
+  opacity: 0.6;
+}
+
+.error-msg {
+  margin-top: 14px;
+  color: var(--c-red);
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+/* ---------- 메인 화면 ---------- */
+
+#main-screen:not([hidden]) {
+  display: flex;
+  flex-direction: column;
+  padding: env(safe-area-inset-top, 0) env(safe-area-inset-right, 0)
+    env(safe-area-inset-bottom, 0) env(safe-area-inset-left, 0);
+}
+
+.top-bar {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 16px;
+}
+
+.conn-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--c-green);
+  flex-shrink: 0;
+}
+
+.conn-dot.is-offline {
+  background: var(--c-gray);
+}
+
+.step-label {
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.toast {
+  flex: 0 0 auto;
+  margin: 0 16px 10px;
+  padding: 12px 14px;
+  border-radius: var(--radius);
+  background: var(--c-text);
+  color: #fff;
+  font-size: 0.95rem;
+  opacity: 0;
+  transform: translateY(-6px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.status-area {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 4px 16px 16px;
+  min-height: 320px;
+}
+
+.status-btn {
+  flex: 1 1 0;
+  min-height: 96px; /* 44px 타깃 요구를 훨씬 상회 */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border-radius: var(--radius);
+  border: 3px solid var(--c-border);
+  background: var(--c-surface);
+  box-shadow: var(--shadow);
+}
+
+.status-btn .status-emoji {
+  font-size: 2.6rem;
+  line-height: 1;
+}
+
+.status-btn .status-text {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--c-text);
+}
+
+.status-btn--green.is-selected {
+  border-color: var(--c-green);
+  background: color-mix(in srgb, var(--c-green) 14%, var(--c-surface));
+}
+
+.status-btn--red.is-selected {
+  border-color: var(--c-red);
+  background: color-mix(in srgb, var(--c-red) 14%, var(--c-surface));
+}
+
+.status-btn:active {
+  transform: scale(0.98);
+}
+
+.comment-panel {
+  flex: 0 0 auto;
+  padding: 4px 16px 20px;
+}
+
+.comment-panel label {
+  display: block;
+  font-size: 0.9rem;
+  color: var(--c-text-sub);
+  margin-bottom: 8px;
+}
+
+#comment-input {
+  width: 100%;
+  min-height: 72px;
+  padding: 12px 14px;
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius);
+  background: var(--c-surface);
+  font-size: 1rem;
+  resize: none;
+}
+
+.comment-footer {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 6px;
+  font-size: 0.8rem;
+  color: var(--c-text-sub);
+}
+
+/* 아주 좁은 화면(320px) 보호 */
+@media (max-width: 340px) {
+  .status-btn .status-emoji {
+    font-size: 2.2rem;
+  }
+  .status-btn .status-text {
+    font-size: 1rem;
+  }
+}
+
+/* 화면이 낮은 기기(가로/키보드로 좁아진 뷰포트)에서도 버튼이 과하게 눌리지 않도록 */
+@media (max-height: 560px) {
+  .status-area {
+    min-height: 220px;
+  }
+  .status-btn {
+    min-height: 64px;
+  }
+  .status-btn .status-emoji {
+    font-size: 1.8rem;
+  }
+}
