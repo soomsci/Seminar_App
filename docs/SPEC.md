@@ -37,6 +37,7 @@
   - 🔴 **막혔어요** — 상태를 `red`로 전송 + 코멘트 입력창 슬라이드 표시(선택 입력, 200자 제한)
 - 현재 내 상태가 버튼에 시각적으로 표시됨(선택된 버튼 강조). 언제든 다시 눌러 변경 가능.
 - 강사가 단계를 넘기면: 내 상태가 자동으로 `none`(회색)으로 리셋되고 "N단계 진행 중"으로 갱신. 짧은 알림 표시.
+- 강사가 **다시 확인**을 요청하면(단계 동일, round 증가): 상태가 회색으로 리셋되고 "N단계 — 강사가 다시 확인을 요청했어요. 여기까지 되면 버튼을 눌러주세요" 안내 + 지원 기기에서 짧은 진동(`navigator.vibrate`).
 
 ### 3.2 강사 대시보드 (`public/host.html`)
 
@@ -51,7 +52,10 @@
   - 원 안에 이름(또는 번호) 작게 표시
   - 빨간 원 클릭 → 코멘트 팝오버 표시
 - 하단: 빨간 상태의 코멘트 목록 (이름 + 코멘트, 최신순) — 강사가 훑기 좋게
-- 조작: **"다음 단계 →" 버튼** — 누르면 `step` 증가 + 전 참가자 상태 리셋. 이전 단계 기록은 `history`에 보존.
+- 조작 버튼 2개:
+  - **"다음 단계 →"** — `step` 증가, `round`를 1로 초기화, 전 참가자 상태 리셋. 직전 상태는 `history`에 보존.
+  - **"🔄 다시 확인"** — `step` 유지, `round` 증가, 전 참가자 상태 리셋. 같은 단계를 재실연한 뒤 시그널을 다시 수합할 때 사용. 직전 상태는 `history`에 보존.
+  - 두 버튼 모두 실수 방지를 위해 확인 한 번(더블탭 또는 confirm) 거칠 것.
 - 통계는 이 이상 넣지 않는다. (요구사항: "너무 많은 정보보다는 원 색깔과 %")
 
 ## 4. 데이터 구조 (Realtime Database)
@@ -62,6 +66,7 @@ sessions/
     meta/
       createdAt: <timestamp>
       step: 1                  # 현재 단계 번호
+      round: 1                 # 현재 단계의 수합 회차 ("다시 확인"마다 +1)
     participants/
       {participantId}/         # push key
         name: "김교사"
@@ -70,8 +75,9 @@ sessions/
         updatedAt: <timestamp>
         joinedAt: <timestamp>
     history/
-      {step}/                  # 단계 넘길 때 그 시점 participants 스냅샷 저장
-        {participantId}: { name, status, comment }
+      {step}/
+        {round}/               # "다음 단계"·"다시 확인" 직전의 participants 스냅샷
+          {participantId}: { name, status, comment }
 ```
 
 ## 5. 공통 데이터 계층 API (`public/js/db.js`) — **인터페이스 계약**
@@ -82,9 +88,10 @@ sessions/
 ```js
 // 강사용
 createSession(): Promise<string>                       // 세션코드 반환
-nextStep(code): Promise<number>                        // history 저장 + 전원 리셋 + 새 step 반환
+nextStep(code): Promise<number>                        // history 저장 + 전원 리셋 + step+1, round=1. 새 step 반환
+restartStep(code): Promise<number>                     // history 저장 + 전원 리셋 + round+1 (step 유지). 새 round 반환
 onParticipants(code, cb): Unsubscribe                  // cb({participantId: {...}, ...})
-onStep(code, cb): Unsubscribe                          // cb(stepNumber)
+onMeta(code, cb): Unsubscribe                          // cb({step, round}) — 단계·회차 변화 구독
 
 // 연수생용
 joinSession(code, name): Promise<{participantId, name}> // 코드 없으면 throw Error("SESSION_NOT_FOUND")
