@@ -1,0 +1,281 @@
+/* 강사 대시보드 스타일 (세션 C 소유)
+   프로젝터(1280px+)에서 뒷자리에서도 읽히도록 큰 글자·고채도 원 색을 우선한다. */
+
+body {
+  min-height: 100vh;
+}
+
+.screen {
+  min-height: 100vh;
+  padding: 24px 32px;
+}
+
+/* ID 선택자가 [hidden]의 display:none보다 우선하지 않도록 명시 */
+#setup-screen[hidden],
+#monitor-screen[hidden] {
+  display: none;
+}
+
+/* ---------- 세션 생성 화면 ---------- */
+
+#setup-screen {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.setup-box {
+  text-align: center;
+  max-width: 480px;
+}
+
+.setup-box h1 {
+  font-size: 2rem;
+  margin-bottom: 12px;
+}
+
+.setup-desc {
+  color: var(--c-text-sub);
+  margin-bottom: 28px;
+  font-size: 1.1rem;
+}
+
+.btn-primary,
+.btn-secondary {
+  font-size: 1.25rem;
+  font-weight: 700;
+  padding: 18px 36px;
+  border-radius: var(--radius);
+  min-height: 44px;
+}
+
+.btn-primary {
+  background: var(--c-primary);
+  color: #fff;
+  box-shadow: var(--shadow);
+}
+
+.btn-secondary {
+  background: var(--c-surface);
+  color: var(--c-text);
+  border: 2px solid var(--c-border);
+}
+
+.error-msg {
+  color: var(--c-red);
+  margin-top: 16px;
+  font-weight: 600;
+}
+
+/* ---------- 모니터링 화면 ---------- */
+
+.top-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 32px;
+  padding-bottom: 16px;
+  border-bottom: 2px solid var(--c-border);
+  margin-bottom: 20px;
+}
+
+.code-block,
+.join-url-block,
+.step-block {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.code-label {
+  font-size: 0.85rem;
+  color: var(--c-text-sub);
+}
+
+.code-value {
+  font-size: 2rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
+.join-url-value {
+  font-size: 1rem;
+  color: var(--c-text-sub);
+  word-break: break-all;
+}
+
+.step-block {
+  margin-left: auto;
+}
+
+.step-value {
+  font-size: 1.3rem;
+  font-weight: 700;
+}
+
+.progress-wrap {
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+.progress-percent {
+  font-size: clamp(4rem, 12vw, 8rem);
+  font-weight: 800;
+  line-height: 1;
+  color: var(--c-primary);
+}
+
+.progress-sub {
+  font-size: 1.4rem;
+  color: var(--c-text-sub);
+  margin-top: 4px;
+}
+
+.participant-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  justify-content: center;
+  padding: 12px 0 28px;
+}
+
+.circle {
+  width: 84px;
+  height: 84px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 6px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #fff;
+  overflow: hidden;
+  word-break: keep-all;
+  border: 3px solid transparent;
+}
+
+.circle--green {
+  background: var(--c-green);
+}
+
+.circle--red {
+  background: var(--c-red);
+  cursor: pointer;
+}
+
+.circle--red:hover,
+.circle--red:focus-visible {
+  border-color: var(--c-text);
+}
+
+.circle--none {
+  background: var(--c-gray);
+}
+
+.bottom-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  align-items: flex-start;
+  justify-content: space-between;
+  border-top: 2px solid var(--c-border);
+  padding-top: 20px;
+}
+
+.comment-panel {
+  flex: 1 1 360px;
+  max-width: 640px;
+}
+
+.comment-title {
+  font-size: 1.1rem;
+  margin-bottom: 10px;
+}
+
+.comment-list {
+  list-style: none;
+  max-height: 220px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.comment-item {
+  display: flex;
+  gap: 10px;
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius);
+  padding: 10px 14px;
+  box-shadow: var(--shadow);
+}
+
+.comment-item-name {
+  font-weight: 700;
+  color: var(--c-red);
+  flex-shrink: 0;
+}
+
+.comment-item-text {
+  color: var(--c-text);
+}
+
+.comment-empty {
+  color: var(--c-text-sub);
+}
+
+.controls {
+  display: flex;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.popover {
+  position: absolute;
+  z-index: 20;
+  background: var(--c-surface);
+  border: 2px solid var(--c-red);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 14px 16px;
+  max-width: 280px;
+}
+
+.popover-name {
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.popover-comment {
+  color: var(--c-text);
+}
+
+.popover-close {
+  position: absolute;
+  top: 6px;
+  right: 8px;
+  font-size: 1.2rem;
+  line-height: 1;
+  color: var(--c-text-sub);
+}
+
+@media (max-width: 700px) {
+  .step-block {
+    margin-left: 0;
+  }
+
+  .bottom-bar {
+    flex-direction: column;
+  }
+
+  .controls {
+    width: 100%;
+  }
+
+  .controls button {
+    flex: 1;
+  }
+}

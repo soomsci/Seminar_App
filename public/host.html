@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>강사 대시보드 — 연수 실습 진행도</title>
+  <link rel="stylesheet" href="css/common.css" />
+  <link rel="stylesheet" href="css/host.css" />
+</head>
+<body>
+  <!-- 세션 생성 단계 -->
+  <section id="setup-screen" class="screen">
+    <div class="setup-box">
+      <h1>강사 대시보드</h1>
+      <p class="setup-desc">새 세션을 시작하면 참가자용 세션코드가 발급됩니다.</p>
+      <button id="create-session-btn" class="btn-primary">새 세션 시작</button>
+      <p id="setup-error" class="error-msg" hidden></p>
+    </div>
+  </section>
+
+  <!-- 모니터링 단계 -->
+  <section id="monitor-screen" class="screen" hidden>
+    <header class="top-bar">
+      <div class="code-block">
+        <span class="code-label">세션코드</span>
+        <span id="session-code" class="code-value"></span>
+      </div>
+      <div class="join-url-block">
+        <span class="code-label">참가자 접속 주소</span>
+        <span id="join-url" class="join-url-value"></span>
+      </div>
+      <div class="step-block">
+        <span id="step-value" class="step-value"></span>
+      </div>
+    </header>
+
+    <div class="progress-wrap">
+      <div id="progress-percent" class="progress-percent">0%</div>
+      <div class="progress-sub"><span id="progress-count">0 / 0</span>명 완료</div>
+    </div>
+
+    <div id="participant-grid" class="participant-grid" aria-live="polite"></div>
+
+    <div class="bottom-bar">
+      <div class="comment-panel">
+        <h2 class="comment-title">🔴 막힘 코멘트</h2>
+        <ul id="comment-list" class="comment-list"></ul>
+      </div>
+      <div class="controls">
+        <button id="restart-step-btn" class="btn-secondary">🔄 다시 확인</button>
+        <button id="next-step-btn" class="btn-primary">다음 단계 →</button>
+      </div>
+    </div>
+
+    <div id="popover" class="popover" hidden>
+      <button id="popover-close" class="popover-close" aria-label="닫기">×</button>
+      <div id="popover-name" class="popover-name"></div>
+      <div id="popover-comment" class="popover-comment"></div>
+    </div>
+  </section>
+
+  <script type="module" src="js/host.js"></script>
+</body>
+</html>
