@@ -5,8 +5,12 @@
 
 ## 총괄매니저
 
-- 완료: SPEC.md, TASKS.md, CLAUDE.md 작성 (2026-07-23). GitHub 저장소 초기 푸시.
-- 남은 것: 세션 A~D 산출물 통합 검토
+- 완료: SPEC.md, TASKS.md, CLAUDE.md 작성 (2026-07-23). GitHub 저장소 초기 푸시. 세션 A(`baba39a`,`3c24806`)·C(`36d4dbb`)·B(`137d934`) 검수 통과 (2026-07-24) — 계약 준수(db.js만 사용, Firebase 직접 호출 없음), confirm·모바일 요구 확인.
+- 남은 것: 세션 D 통합 테스트·배포 검토
+- 결정 사항:
+  - B의 `onConnectionState` API 추가 제안 → **v1 보류.** `navigator.onLine` 최선노력으로 충분하며, D의 실 Firebase 통합 테스트에서 문제 확인 시 재검토.
+  - C의 `?code=` URL 자동입장 제안 → **v1 범위 밖, v1.1 후보로 기록.** (B 구현에 현재 없음)
+  - QR코드 → C 결정대로 v1은 코드+URL 텍스트 표시. v2 검토.
 - 요청: 없음
 
 ## 세션 A — 기반/데이터
