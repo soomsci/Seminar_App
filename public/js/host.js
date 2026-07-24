@@ -3,6 +3,8 @@
 
 import { createSession, nextStep, restartStep, onParticipants, onMeta } from './db.js';
 
+const HOST_STORAGE_KEY = 'seminar-app:host';
+
 const $ = (id) => document.getElementById(id);
 
 const setupScreen = $('setup-screen');
@@ -19,6 +21,7 @@ const gridEl = $('participant-grid');
 const commentListEl = $('comment-list');
 const nextStepBtn = $('next-step-btn');
 const restartStepBtn = $('restart-step-btn');
+const resetSessionBtn = $('reset-session-btn');
 
 const popover = $('popover');
 const popoverName = $('popover-name');
@@ -27,6 +30,8 @@ const popoverClose = $('popover-close');
 
 let currentCode = null;
 let currentParticipants = {};
+let unsubMeta = null;
+let unsubParticipants = null;
 
 function buildJoinUrl(code) {
   const mock = new URLSearchParams(location.search).get('mock') === '1';
@@ -154,8 +159,23 @@ async function startSession(code) {
   setupScreen.hidden = true;
   monitorScreen.hidden = false;
 
-  onMeta(code, renderStep);
-  onParticipants(code, onParticipantsUpdate);
+  localStorage.setItem(HOST_STORAGE_KEY, JSON.stringify({ code }));
+
+  unsubMeta = onMeta(code, renderStep);
+  unsubParticipants = onParticipants(code, onParticipantsUpdate);
+}
+
+function resetSession() {
+  unsubMeta?.();
+  unsubParticipants?.();
+  unsubMeta = null;
+  unsubParticipants = null;
+  currentCode = null;
+  currentParticipants = {};
+  localStorage.removeItem(HOST_STORAGE_KEY);
+  closePopover();
+  monitorScreen.hidden = true;
+  setupScreen.hidden = false;
 }
 
 createBtn.addEventListener('click', async () => {
@@ -199,3 +219,23 @@ restartStepBtn.addEventListener('click', async () => {
     restartStepBtn.disabled = false;
   }
 });
+
+resetSessionBtn.addEventListener('click', () => {
+  const ok = confirm(
+    '현재 세션 모니터링을 종료하고 새 세션을 시작할까요? (기존 세션 데이터는 유지됩니다)',
+  );
+  if (!ok) return;
+  resetSession();
+});
+
+// 새로고침·절전 복귀 시 진행 중이던 세션으로 자동 복귀 (SPEC §3.2, QA-4)
+(function restoreSession() {
+  const saved = localStorage.getItem(HOST_STORAGE_KEY);
+  if (!saved) return;
+  try {
+    const { code } = JSON.parse(saved);
+    if (code) startSession(code);
+  } catch {
+    localStorage.removeItem(HOST_STORAGE_KEY);
+  }
+})();
