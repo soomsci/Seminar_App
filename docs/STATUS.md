@@ -45,7 +45,14 @@
   - 확인 완료: `?mock=1`(세션 ABC234)로 입장→🟢/🔴→코멘트→다시 확인 토스트/진동 호출→다음 단계 토스트→새로고침 복귀→잘못된 코드/짧은 코드 에러 문구까지 브라우저(Chrome, claude-in-chrome)로 직접 확인. 320px 뷰(iframe으로 실측)에서 버튼·코멘트 패널 깨짐 없음, 코멘트 복원도 정상.
   - 버그 수정: `participant.css`에서 `#entry-screen`/`#main-screen`에 준 `display:flex`가 CSS 캐스케이드 우선순위(오서 스타일이 UA `[hidden]{display:none}`을 이김) 때문에 `hidden` 속성을 무시하고 두 화면이 동시에 보이는 문제가 있었음. `:not([hidden])`으로 스코프를 좁혀 해결.
 - 남은 것: 없음 (세션 B 완료). 실제 Firebase 모드(비 mock)에서의 재확인은 세션 D의 통합 테스트에서 커버됨.
+- **QA-1·QA-2 수정 완료 (2026-07-24, `docs/STATUS.md` QA 리포트 참조)**:
+  - **[QA-1]** `participant.js`의 `handleParticipants()`에서 서버 상태가 `red`가 아니게 되면(리셋·초록 전환 등) `commentInput.value`를 즉시 비우도록 수정(else 분기 추가). 기존엔 `red`일 때만 채우고 그 외엔 그대로 둬서, 리셋 후 새 회차에 빈 코멘트로 🔴을 눌러도 이전 회차 코멘트가 그대로 재전송됐음.
+  - **[QA-2]** 총괄매니저 결정대로 **방안 (B)** 구현: `handleParticipants()`가 받은 참가자 맵에 내 `participantId`가 없으면 그 즉시(6초 타임아웃을 기다리지 않고) 구독을 해지하고 `restore-error` 화면을 띄우도록 변경. `onMeta`는 실모드에서 없는 세션에도 기본값으로 응답해 신뢰할 수 없으므로, `handleMeta`에서 하던 `restoreTimeoutTimer` 해제 로직은 제거하고 판정을 전적으로 `handleParticipants`로 옮겼다. db.js 계약(SPEC §5) 변경 없음.
+  - **회귀 확인**: 정상 참가자(세션에 실제 존재하는 `participantId`)로 복귀하는 기존 흐름은 그대로 동작함을 별도로 검증(코멘트·상태 복원 포함).
+  - **검증 방법**: (1) Chrome(claude-in-chrome, `?mock=1`)에서 실제 UI로 QA-1·QA-2 재현 절차를 그대로 수행해 수정 확인. (2) 브라우저 확장이 세션 도중 일시적으로 끊겼을 때는 대안으로 `public/js/participant.js`를 Node에 최소 DOM 셰임(가짜 `document`/`localStorage`/`navigator` 등)을 붙여 직접 구동하는 회귀 테스트 3종(QA-1, QA-2 무효 참가자, QA-2 정상 복귀 회귀)을 임시로 작성해 총 16개 단언 전부 통과 확인 — 테스트 스크립트는 스크래치패드에서 실행 후 폐기, 저장소에는 포함하지 않음.
+  - 실제 브라우저 검증 중 로컬 스토리지에 남아있던 실 Firebase 세션(`XC4UX2`)의 오래된 참가자 데이터로 QA-2 수정이 실제로 즉시 발동하는 것도 우연히 확인됨(사전 정리 후 재검증).
 - 요청:
+  - **세션 D**: [QA-1], [QA-2] 수정 완료했습니다. 실 Firebase 모드에서 재현 절차 그대로 재검증 부탁드립니다.
   - 연결 상태 표시(SPEC §7 "작은 점")는 db.js에 Firebase `.info/connected` 구독을 노출하는 API가 없어 브라우저 `navigator.onLine`으로 대체했다. 실제 Firebase 연결 유실(온라인이지만 DB 연결 끊김)은 감지하지 못한다. 세션 A가 여유 있으면 `onConnectionState(cb)` 같은 API 추가를 검토해달라 — 필수는 아니고 개선 제안.
 
 ## 세션 C — 강사 대시보드

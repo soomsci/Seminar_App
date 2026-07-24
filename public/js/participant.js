@@ -88,7 +88,8 @@ function subscribe() {
 }
 
 function handleMeta(meta) {
-  clearTimeout(restoreTimeoutTimer);
+  // 세션 존재 확인은 handleParticipants(내 participantId 포함 여부)에서만 판정한다.
+  // onMeta는 실모드에서 없는 세션에도 기본값({step:1,round:1})으로 콜백하므로 여기서는 판단 근거로 쓰지 않는다. (QA-2)
   if (lastMeta) {
     if (meta.step !== lastMeta.step) {
       showToast(`${meta.step}단계로 넘어갔어요.`);
@@ -101,13 +102,25 @@ function handleMeta(meta) {
 }
 
 function handleParticipants(participants) {
+  if (!session) return;
+  const me = participants[session.participantId];
+  if (!me) {
+    // 내 participantId가 참가자 목록에 없다 = 세션이 삭제됐거나 존재하지 않는 코드로 복귀한 것으로 판정한다(QA-2 방안 B).
+    clearTimeout(restoreTimeoutTimer);
+    unsubMeta?.();
+    unsubParticipants?.();
+    showScreen(restoreErrorScreen);
+    return;
+  }
   clearTimeout(restoreTimeoutTimer);
-  const me = session && participants[session.participantId];
-  if (!me) return;
   myStatus = me.status;
   updateStatusUI();
   if (me.status === 'red' && document.activeElement !== commentInput) {
     commentInput.value = me.comment || '';
+    updateCommentCount();
+  } else if (me.status !== 'red') {
+    // 리셋(또는 green) 후 이전 회차 코멘트가 남아 다음 빨강 전송에 자동으로 재사용되는 문제 방지(QA-1)
+    commentInput.value = '';
     updateCommentCount();
   }
 }
